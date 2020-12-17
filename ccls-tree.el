@@ -262,20 +262,20 @@
 (defun ccls-tree-press (&optional split-fn)
   "Jump to the location."
   (interactive)
-  (-when-let* ((workspaces lsp--buffer-workspaces)
+  (-when-let* (;; (workspaces lsp--buffer-workspaces)
                (node (ccls-tree--node-at-point))
                (unused (window-live-p ccls-tree--origin-win)))
     (with-selected-window ccls-tree--origin-win
       (when split-fn
         (funcall split-fn))
       (find-file (car (ccls-tree-node-location node)))
-      ;; TODO Extract lsp-ui-peek.el lsp-ui-peek--goto-xref
-      (unless lsp--buffer-workspaces
-        (setq lsp--buffer-workspaces workspaces)
-        (lsp-mode 1)
-        (dolist (workspace cur-buffer-workspaces)
-          (lsp--open-in-workspace workspace)))
-      (goto-char (lsp--position-to-point (cdr (ccls-tree-node-location node))))
+      ;; ;; TODO Extract lsp-ui-peek.el lsp-ui-peek--goto-xref
+      ;; (unless lsp--buffer-workspaces
+      ;;   (setq lsp--buffer-workspaces workspaces)
+      ;;   (lsp-mode 1)
+      ;;   (dolist (workspace cur-buffer-workspaces)
+      ;;     (lsp--open-in-workspace workspace)))
+      (goto-char (eglot--lsp-position-to-point (cdr (ccls-tree-node-location node))))
       (recenter)
       (run-hooks 'xref-after-jump-hook))))
 
